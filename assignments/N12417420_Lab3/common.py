@@ -71,6 +71,14 @@ class Graph():
       sys.exit()
     self.edges[name1].append(name2)
 
+  def get_decision_node_names(self):
+    """Return a list of decision node names"""
+    self.decision_node_names = []
+    for node_name in self.nodes:
+      if self.nodes[node_name].type == "DECISION":
+        self.decision_node_names.append(node_name)
+    return self.decision_node_names
+
   def get_encoded_node_names(self):
     """Encode node names into integers and store it along with
     the decoded mapping
@@ -100,9 +108,9 @@ class Graph():
           failure_prob_splits = alpha/(len(neighbours[1:])) if len(neighbours[1:]) > 0 else 0
           for _ in neighbours[1:]:
             expanded_transition_probs.append(failure_prob_splits)
-          transition_probs = expanded_transition_probs  
+          transition_probs = expanded_transition_probs
         if sum(transition_probs) != 1:
-          sys.exit(f"Sum of transition probabilities for the node {node_name} != 1")  
+          sys.exit(f"Sum of transition probabilities for the node {node_name} != 1")
       for idx, neighbour in enumerate(neighbours):
         row = encoding_map[node_name]
         column = encoding_map[neighbour]
@@ -116,10 +124,10 @@ class Graph():
 
   def get_rewards(self):
     """Create the probability transition matrix from the adjacency list
-    representation"""  
+    representation"""
     rewards = [0 for _ in range(len(self.nodes))]
     encoding_map = self.get_encoded_node_names()
     for node_name in self.nodes:
       rewards[encoding_map[node_name]] = self.nodes[node_name].value
-    rewards = np.array(rewards)  
+    rewards = np.array(rewards)
     return rewards

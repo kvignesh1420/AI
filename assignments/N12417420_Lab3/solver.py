@@ -5,9 +5,7 @@
 #############################
 """
 The following module provides an interface for
-- value iterations
-- policy iterations
-based solver
+value and policy iterations based markov process solver
 """
 
 import logging
@@ -24,14 +22,17 @@ class MarkovProcessSolver():
     self.tolerance = tolerance
     self.minimize_cost = minimize_cost
     self.values = self.rewards
-    self.policy = self.get_policy()
+    self.decision_node_names = self.g.get_decision_node_names()
+    self.policy = self.get_initial_policy()
 
-  def get_policy(self):
-    """Print the verbose policy"""
+  def get_initial_policy(self):
+    """Get the initial policy from the transition matrix"""
     policy = {}
     decoding_map = self.g.decoding_map
     for idx, row in enumerate(self.transition_matrix):
       state = decoding_map[idx]
+      if state not in self.decision_node_names:
+        continue
       choice = decoding_map[np.argmax(row)]
       policy[state] = choice
     return policy
@@ -45,7 +46,7 @@ class MarkovProcessSolver():
       new_policy = self.policy_iteration()
       if new_policy == current_policy:
         return new_policy, values
-      current_policy = new_policy  
+      current_policy = new_policy
 
   def value_iteration(self):
     """Run value iteration"""
@@ -66,11 +67,6 @@ class MarkovProcessSolver():
   def policy_iteration(self):
     """Run policy iteration"""
     logging.debug("Policy Iteration")
-    self.decision_node_names = []
-    for node_name in self.g.nodes:
-      if self.g.nodes[node_name].type == "DECISION":
-        self.decision_node_names.append(node_name)
-
     encoding_map = self.g.encoding_map
     new_policy = {}
     for node_name in self.decision_node_names:
@@ -88,8 +84,8 @@ class MarkovProcessSolver():
         else:
           if neighbour_value > ideal_neighbour_value:
             ideal_neighbour_value = neighbour_value
-            new_policy[node_name] = neighbour  
-    self.update_policy_transition_matrix(policy=new_policy)      
+            new_policy[node_name] = neighbour
+    self.update_policy_transition_matrix(policy=new_policy)
     return new_policy
 
   def update_policy_transition_matrix(self, policy):
@@ -102,9 +98,9 @@ class MarkovProcessSolver():
       failure_prob_splits = alpha/(len(neighbours[1:])) if len(neighbours[1:]) > 0 else 0
       expanded_transition_probs = [failure_prob_splits for _ in range(len(neighbours))]
       expanded_transition_probs[neighbours.index(choice_node_name)] = transition_probs[0]
-      transition_probs = expanded_transition_probs  
+      transition_probs = expanded_transition_probs
       if sum(transition_probs) != 1:
-        sys.exit("Sum of transition probabilities for the node != 1")  
+        sys.exit(f"Sum of transition probabilities for the node {node_name} != 1")
       for idx, neighbour in enumerate(neighbours):
         row = encoding_map[node_name]
         column = encoding_map[neighbour]
