@@ -14,6 +14,19 @@ import numpy as np
 
 class MarkovProcessSolver():
   def __init__(self, g, transition_matrix, rewards, df, max_iters, tolerance, minimize_cost):
+    """Initialize the MarkovProcessSolver for value and policy iterations
+
+    Args:
+      g: An instance of `common.Graph`
+      transition_matrix: The probability transition matrix for the states
+      rewards: Rewards for the states
+      df: Discount factor for future rewards
+      max_iters: cutoff number of value iterations for a given policy
+      tolerance: threshold for the absolute difference between current
+                and old values of states before stopping the value iteration.
+      minimize_cost: A boolean representing whether we want to minimize cost or
+                maximize rewards.
+    """
     self.g = g
     self.transition_matrix = transition_matrix
     self.rewards = rewards
@@ -38,7 +51,12 @@ class MarkovProcessSolver():
     return policy
 
   def run(self):
-    """Run the solver"""
+    """Run the markov process solver using value and policy
+    iterations.
+
+    Returns:
+      The ideal policy and state values
+    """
     current_policy = self.policy
     values = self.values
     while True:
@@ -49,7 +67,11 @@ class MarkovProcessSolver():
       current_policy = new_policy
 
   def value_iteration(self):
-    """Run value iteration"""
+    """Run value iteration and return the updated values
+
+    Returns:
+      Updated values of the states
+    """
     logging.debug("Value Iteration")
     values = self.values
     logging.debug(self.transition_matrix.shape)
@@ -65,7 +87,11 @@ class MarkovProcessSolver():
     return values
 
   def policy_iteration(self):
-    """Run policy iteration"""
+    """Run policy iteration and the return the updated policy
+
+    Returns:
+      The new policy dictionary
+    """
     logging.debug("Policy Iteration")
     encoding_map = self.g.encoding_map
     new_policy = {}
@@ -85,10 +111,19 @@ class MarkovProcessSolver():
           if neighbour_value > ideal_neighbour_value:
             ideal_neighbour_value = neighbour_value
             new_policy[node_name] = neighbour
-    self.update_policy_transition_matrix(policy=new_policy)
+    self.update_transition_matrix(policy=new_policy)
     return new_policy
 
-  def update_policy_transition_matrix(self, policy):
+  def update_transition_matrix(self, policy):
+    """Update the probability transition matrix based on new policy
+
+    Args:
+      policy: The new policy based on which the transition matrix will
+        be updated.
+
+    Returns:
+      A new transition matrix
+    """
     encoding_map = self.g.encoding_map
     for node_name in self.decision_node_names:
       neighbours = self.g.edges[node_name]
@@ -109,3 +144,4 @@ class MarkovProcessSolver():
         else:
           prob = transition_probs[idx]
         self.transition_matrix[row][column] = prob
+    return self.transition_matrix
