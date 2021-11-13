@@ -1,0 +1,16 @@
+S C
+S A
+C D
+D G
+A 8 8
+B 12 4
+E 12 8
+A C
+A B
+A E
+E G
+
+S 0 0
+C 0 7
+D 0 17
+G 3 11
