@@ -8,7 +8,7 @@
 
 ### Python coding style
 
-The assignment is written in python3 and alligns with the
+The assignment is written in python3 and aligns with the
 [Google Python Style Guide](https://github.com/google/styleguide/blob/gh-pages/pyguide.md)
 
 The `.pylintrc` file has been referenced directly from the [Tensorflow project](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/ci_build/pylintrc), with
@@ -22,14 +22,15 @@ pylint --rcfile=./.pylintrc ./*.py
 ### Running the code
 
 The code is written in `python3` can be executed using the `python>=3.6` interpreters.
-**NOTE: The code depends on the [PLY](https://github.com/dabeaz/ply) and numpy python packages**
-The package is present on the CIMS machines.
+**NOTE: The code depends on the [PLY](https://github.com/dabeaz/ply) and numpy python packages.**
+
+The packages are present on the CIMS machines.
 
 ```console
 $ pip3 list | grep ply
 ply                                3.11
-$ pip list | grep numpy
-numpy                            1.21.0
+$ pip3 list | grep numpy
+numpy                            1.19.5
 ```
 
 However, they can be installed using:
