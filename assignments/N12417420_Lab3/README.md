@@ -22,17 +22,19 @@ pylint --rcfile=./.pylintrc ./*.py
 ### Running the code
 
 The code is written in `python3` can be executed using the `python>=3.6` interpreters.
-**NOTE: The code depends on the PLY python package for lax/yacc implementations**
+**NOTE: The code depends on the [PLY](https://github.com/dabeaz/ply) and numpy python packages**
 The package is present on the CIMS machines.
 
 ```console
 $ pip3 list | grep ply
 ply                                3.11
+$ pip list | grep numpy
+numpy                            1.21.0
 ```
 
-However, it can be installed using:
+However, they can be installed using:
 ```
-$ pip3 install ply
+$ pip3 install ply numpy
 ```
 Please make sure that the `pip3` corresponds to the `python3` that we use for executing the programs.
 
