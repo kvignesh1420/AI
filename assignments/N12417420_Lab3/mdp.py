@@ -9,6 +9,7 @@ The following module provides an interface for the markov process solver
 
 import argparse
 import logging
+import re
 import sys
 from yacc_parser import lexer, parser
 from common import Graph
@@ -51,6 +52,15 @@ def validate_args(args):
     sys.exit("tolerance for value interations should be non-negative, "
                                       f"but got tol = {args.tol}")
 
+def handle_unseparated_floats(line):
+  """Handle lines with probabilities which are not-separated by
+  whitespace.
+  """
+  if "%" in line:
+    pattern = r'\.[0-9]+(e[-+]?[0-9]+)?\.[0-9]+(e[-+]?[0-9]+)?'
+    if re.search(pattern, line) is not None:
+      sys.exit(f"Invalid probabilities in line: {line}")
+
 def format_input_file(input_file):
   """Validate the contents of the input file.
 
@@ -73,6 +83,7 @@ def format_input_file(input_file):
       continue
     fmt_line = line.replace("\n", "").strip()
     if fmt_line:
+      handle_unseparated_floats(fmt_line)
       fmt_line = parser.parse(fmt_line)
       fmt_lines.append(fmt_line)
   return fmt_lines
