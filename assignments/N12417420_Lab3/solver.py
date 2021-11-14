@@ -18,7 +18,7 @@ class MarkovProcessSolver():
 
     Args:
       g: An instance of `common.Graph`
-      transition_matrix: The probability transition matrix for the states
+      transition_matrix: The initial probability transition matrix for the states
       rewards: Rewards for the states
       df: Discount factor for future rewards
       max_iters: cutoff number of value iterations for a given policy

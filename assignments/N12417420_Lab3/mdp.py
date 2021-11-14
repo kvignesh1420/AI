@@ -18,7 +18,8 @@ from solver import MarkovProcessSolver
 def create_parser():
   """Creates the argument parser to control the program executions.
 
-  Returns: An instance of `argparse.ArgumentParser`.
+  Returns:
+    An instance of `argparse.ArgumentParser`.
   """
   parser = argparse.ArgumentParser(
     description="Markov process solver",
@@ -26,8 +27,8 @@ def create_parser():
   )
   parser.version = "1.0.0"
   parser.add_argument('-v', action='count', help="Enable verbosity for program runs")
-  parser.add_argument('-df', type=float, action='store', default=1,
-                      help="future reward discount factor in the range [0, 1]. Defaults to 1.")
+  parser.add_argument('-df', type=float, action='store', default=1.0,
+                      help="future reward discount factor in the range [0, 1]. Defaults to 1.0")
   parser.add_argument('-min', type=bool, action='store', default=False, help="minimize "
                         "values as costs, defaults to False which maximizes values as rewards")
   parser.add_argument('-tol', type=float, action='store', default=0.01, help="tolerance for "
@@ -47,10 +48,7 @@ def validate_args(args):
     sys.exit(f"Discount factor df = {args.df} is not in the range of [0, 1]")
   if args.iter < 0:
     sys.exit("cutoff for value interations should be non-negative, "
-                                      f"but got iter = {args.iter}")
-  if args.tol < 0:
-    sys.exit("tolerance for value interations should be non-negative, "
-                                      f"but got tol = {args.tol}")
+                              f"but got option -iter = {args.iter}")
 
 def handle_unseparated_floats(line):
   """Handle lines with probabilities which are not-separated by
@@ -89,12 +87,30 @@ def format_input_file(input_file):
   return fmt_lines
 
 def assign_values(g, all_tokens):
+  """Add nodes to graph and assign values to them
+
+  Args:
+    g: An instance of `common.Graph`
+    all_tokens: tokens of all lines parsed by lex
+
+  Returns:
+    An instance of `common.Graph` with added nodes.
+  """
   for tokens in all_tokens:
     if tokens[1].type == "EQUALS":
       g.add_node(name=tokens[0].value, value=float(tokens[2].value))
   return g
 
 def assign_probabilities(g, all_tokens):
+  """Assign probabilities to the graph nodes
+
+  Args:
+    g: An instance of `common.Graph`
+    all_tokens: tokens of all lines parsed by lex
+
+  Returns:
+    An instance of `common.Graph` with updated/added nodes.
+  """
   for tokens in all_tokens:
     if tokens[1].type == "MOD":
       node_name = tokens[0].value
@@ -107,6 +123,15 @@ def assign_probabilities(g, all_tokens):
   return g
 
 def assign_edges(g, all_tokens):
+  """Add edges to nodes in the graph
+
+  Args:
+    g: An instance of `common.Graph`
+    all_tokens: tokens of all lines parsed by lex
+
+  Returns:
+    An instance of `common.Graph` with added edges.
+  """
   for tokens in all_tokens:
     if tokens[1].type == "COLON":
       parent_node_name = tokens[0].value
@@ -121,6 +146,21 @@ def assign_edges(g, all_tokens):
   return g
 
 def validate_nodes(g):
+  """Validate nodes based on the following rules:
+
+  - If a node has edges but no probability entry,
+    it is assumed to be a decision node with p=1
+  - If a node has edges but no reward entry, it is
+    assumed to have a reward of 0
+  - If a node has no edges it is terminal. A probability
+    entry for such a node is an error.
+
+  Args:
+    g: An instance of `common.Graph`
+
+  Returns:
+    An instance of `common.Graph` with validated nodes.
+  """
   node_names = g.nodes
   for node_name in node_names:
     node = g.nodes[node_name]
@@ -134,6 +174,15 @@ def validate_nodes(g):
   return g
 
 def assign_node_types(g):
+  """Assign types to nodes based on its values and probs
+  attributes.
+
+  Args:
+    g: An instance of `common.Graph`
+
+  Returns:
+    An instance of `common.Graph` with updated nodes.
+  """
   node_names = g.nodes
   for node_name in node_names:
     node = g.nodes[node_name]
