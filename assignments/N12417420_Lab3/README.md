@@ -24,6 +24,9 @@ pylint --rcfile=./.pylintrc ./*.py
 The code is written in `python3` can be executed using the `python>=3.6` interpreters.
 **NOTE: The code depends on the [PLY](https://github.com/dabeaz/ply) and numpy python packages.**
 
+- ply for parsing the input.
+- numpy for efficient matrix operations.
+
 The packages are present on the CIMS machines.
 
 ```console
@@ -42,6 +45,8 @@ Please make sure that the `pip3` corresponds to the `python3` that we use for ex
 #### Help with executions
 
 ```console
+$ python3 mdp.py -h
+
 usage: mdp.py [-h] [-v] [-df DF] [-min MIN] [-tol TOL] [-iter ITER] input_file
 
 Markov process solver
@@ -52,7 +57,7 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
   -v          Enable verbosity for program runs
-  -df DF      future reward discount factor in the range [0, 1]. Defaults to 1.
+  -df DF      future reward discount factor in the range [0, 1]. Defaults to 1.0
   -min MIN    minimize values as costs, defaults to False which maximizes values as rewards
   -tol TOL    tolerance for each value iteration. Defaults to 0.01
   -iter ITER  Maximum number of value iteration updates before termination. Defaults to 100
@@ -70,6 +75,9 @@ $ python3 mdp.py ../tests/lab3_input1.txt
 
 # Run the solver with default options in verbose mode
 $ python3 mdp.py -v ../tests/lab3_input1.txt
+
+# Run the solver with a tolerance of 0.001
+$ python3 mdp.py -tol 0.001 ../tests/lab3_input2.txt
 
 # Run the solver with cost minimizer option
 $ python3 mdp.py -min True ../tests/lab3_input3.txt
