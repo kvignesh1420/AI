@@ -60,7 +60,7 @@ def solve(args):
   dist_function = e2_distance if args.d == "e2" else manh_distance
   k_nn = KNearestNeighbors(
     k=args.k,
-    dist=dist_function,
+    dist_function=dist_function,
     unitw=args.unitw,
     train_file=args.train,
     test_file=args.test
