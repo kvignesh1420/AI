@@ -114,8 +114,8 @@ class KNearestNeighbors(Classifier):
       if p == gt:
         precision_dict[p]["predicted_count"] += 1
         precision_dict[p]["actual_count"] += 1
-        recall_dict[p]["predicted_count"] += 1
-        recall_dict[p]["actual_count"] += 1
+        recall_dict[gt]["predicted_count"] += 1
+        recall_dict[gt]["actual_count"] += 1
       else:
         precision_dict[p]["predicted_count"] += 1
         recall_dict[gt]["actual_count"] += 1
