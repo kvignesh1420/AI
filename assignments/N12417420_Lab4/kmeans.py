@@ -31,9 +31,9 @@ def create_parser():
                         "function to determine the closeness of points. Should be one of "
                         "'e2': euclidean squared, 'manh': manhattan. Defaults to 'e2'.")
   parser.add_argument('-data', type=str, required=True, action='store',
-                                help="Path to the clustering data file")
+                                help="A file containing the data to cluster.")
   parser.add_argument('centroids', nargs='+', type=str, action='store',
-                                help="Path to the testing data file")
+                                help="Initial centroids for clustering.")
   return parser
 
 def validate_args(args):

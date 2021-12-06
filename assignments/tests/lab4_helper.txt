@@ -12,3 +12,8 @@ python3 knn.py -k 7 -d e2 -train ../tests/lab4_knn_train_input3.txt -test ../tes
 python3 knn.py -k 7 -unitw True -d e2 -train ../tests/lab4_knn_train_input3.txt -test ../tests/lab4_knn_test_input3.txt
 python3 knn.py -k 7 -d manh -train ../tests/lab4_knn_train_input3.txt -test ../tests/lab4_knn_test_input3.txt
 python3 knn.py -k 7 -unitw True -d manh -train ../tests/lab4_knn_train_input3.txt -test ../tests/lab4_knn_test_input3.txt
+
+python3 kmeans.py -d e2 -data ../tests/lab4_kmeans_input1.txt 0,0 200,200 500,500
+python3 kmeans.py -d manh -data ../tests/lab4_kmeans_input1.txt 0,0 200,200 500,500
+python3 kmeans.py -d e2 -data ../tests/lab4_kmeans_input2.txt 0,0,0 200,200,200 500,500,500
+python3 kmeans.py -d manh -data ../tests/lab4_kmeans_input2.txt 0,0,0 200,200,200 500,500,500
